@@ -1,6 +1,5 @@
 package UI;
 
-import domain.Exercise;
 import utils.DatabaseUtils;
 import utils.UIUtils;
 

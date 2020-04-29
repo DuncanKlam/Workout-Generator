@@ -9,7 +9,6 @@ import javax.swing.plaf.FontUIResource;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
@@ -31,13 +30,12 @@ public class ExerciseEditorUI extends JFrame implements ActionListener {
         observers.add(observer);
     }
 
-    public void editExercise(Exercise ex){
+    public void showExerciseEditor(Exercise ex){
 
         UIManager.put("Label.font", new FontUIResource(new Font("Arial", Font.BOLD, 20)));
         UIManager.put("Button.font", new FontUIResource(new Font("Dialog", Font.PLAIN, 20)));
 
         JPanel panel = new JPanel();
-        UIUtils uiUtils = new UIUtils(panel);
         GridBagLayout gridBagLayout = new GridBagLayout();
         panel.setLayout(gridBagLayout);
         panel.setName("Exercise Viewer Interface");
@@ -85,12 +83,12 @@ public class ExerciseEditorUI extends JFrame implements ActionListener {
         var confirmButtonConstraints = new GridBagConstraints(0, nextIndice + (muscleGroups.length/2), 1, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(5, 5, 5, 5), 0, 0);
         panel.add(confirmButton, confirmButtonConstraints);
         confirmButton.addActionListener(e ->{
-            String name = uiUtils.getTextFromComponent(1);
-            int sets = uiUtils.getIntFromComponent(3);
-            int reps = uiUtils.getIntFromComponent(5);
-            String unit = uiUtils.getTextFromComponent(7);
-            String description = uiUtils.getTextFromComponent(9);
-            LinkedList<String> muscles = uiUtils.getMusclesList(checkBoxes);
+            String name = UIUtils.getTextFromComponent(panel, 1);
+            int sets = UIUtils.getIntFromComponent(panel, 3);
+            int reps = UIUtils.getIntFromComponent(panel, 5);
+            String unit = UIUtils.getTextFromComponent(panel,7);
+            String description = UIUtils.getTextFromComponent(panel,9);
+            LinkedList<String> muscles = UIUtils.getMusclesList(checkBoxes);
             notifyObservers(new Exercise(name, sets, reps, unit, muscles, description));
             setVisible(false);
             dispose();

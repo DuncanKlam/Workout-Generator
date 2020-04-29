@@ -1,43 +1,77 @@
 package utils;
 
 import domain.Exercise;
-import org.junit.jupiter.api.Test;
+import domain.Workout;
 
 import java.sql.SQLException;
+import java.time.LocalTime;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class DatabaseUtilsTest {
 
-    DatabaseUtils databaseUtils = new DatabaseUtils();
+    DatabaseUtils databaseUtils;
 
-    DatabaseUtilsTest() throws SQLException {
+    List<String> list = List.of("test", "test2", "test3");
+
+    Exercise testExercise = new Exercise("test",1,1,"test",list, "test exercise");
+
+    List<Exercise> exerciseList = List.of(testExercise, testExercise, testExercise);
+
+    Workout testWorkout = new Workout("test", exerciseList,"Low");
+    Workout w = null;
+
+    DatabaseUtilsTest(){
+        try {
+            testWorkout.setTimeEnded(LocalTime.now().plusMinutes(2));
+            w = new Workout(testWorkout);
+            databaseUtils = new DatabaseUtils();
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+
     }
 
     @org.junit.jupiter.api.Test
-    void addExerciseToDatabase() {
-    }
-
-    @org.junit.jupiter.api.Test
-    void readDatabaseIsNotNull() {
+    void readExerciseTableIsNotNull() {
         assertNotNull(databaseUtils.readExerciseTable());
     }
 
     @org.junit.jupiter.api.Test
-    void readDatabaseContainsExercises() {
+    void readWorkoutTableIsNotNull() {
+        assertNotNull(databaseUtils.readWorkoutTable());
+    }
+
+    @org.junit.jupiter.api.Test
+    void exerciseTableContainsAtLeastOneEntry() {
         assertTrue(databaseUtils.readExerciseTable().get(0).getClass() == Exercise.class);
     }
 
     @org.junit.jupiter.api.Test
-    void deleteSingleExercise() {
+    void workoutTableContainsAtLeastOneEntry() {
+        testWorkout.setTimeEnded(LocalTime.now().plusMinutes(2));
+        Workout w = new Workout(testWorkout);
+        databaseUtils.addWorkoutToDatabase(w);
+        assertTrue(databaseUtils.readWorkoutTable().get(0).getClass() == Workout.class);
     }
 
     @org.junit.jupiter.api.Test
-    void clearDatabase() {
+    void exerciseTableAcceptsInputAndDeletion() {
+        databaseUtils.addExerciseToDatabase(testExercise);
+        assertTrue(databaseUtils.readExerciseTable().contains(testExercise));
+        assertEquals("Database Delete: Success", databaseUtils.deleteSingleExercise(testExercise.name));
     }
 
-    @Test
-    void deleteSingleWorkout() {
-        databaseUtils.deleteSingleWorkout("Full Body", "0h 0m 2s");
+    @org.junit.jupiter.api.Test
+    void workoutTableAcceptsInputAndDeletion() {
+        databaseUtils.addWorkoutToDatabase(w);
+        assertTrue(databaseUtils.readWorkoutTable().contains(w));
+        assertEquals("Database Delete: Success", databaseUtils.deleteSingleWorkout(w.title,w.duration));
+    }
+
+    @org.junit.jupiter.api.Test
+    void clearWorkoutTableOfTestWorkouts(){
+        assertEquals("Success", databaseUtils.clearWorkoutDatabaseOfSpecificWorkout(w));
     }
 }

@@ -2,7 +2,6 @@ package domain;
 
 import utils.DatabaseUtils;
 
-import javax.swing.*;
 import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
@@ -22,6 +21,11 @@ public class WorkoutGenerator {
 
     public String addExercise(Exercise e){
         return databaseUtils.addExerciseToDatabase(e);
+    }
+
+    public String editExercise(Exercise exerciseToEdit) {
+        deleteExercise(exerciseToEdit.name);
+        return addExercise(exerciseToEdit);
     }
 
     public String addWorkout(Workout w){ return  databaseUtils.addWorkoutToDatabase(w); }
@@ -161,5 +165,4 @@ public class WorkoutGenerator {
             return new String[]{"None"};
         }
     }
-
 }

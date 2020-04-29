@@ -21,7 +21,6 @@ public class ExerciseViewerUI extends JFrame implements ActionListener {
         UIManager.put("Button.font", new FontUIResource(new Font("Dialog", Font.PLAIN, 20)));
 
         JPanel panel = new JPanel();
-        UIUtils uiUtils = new UIUtils(panel);
 
         GridBagLayout gridBagLayout = new GridBagLayout();
         panel.setLayout(gridBagLayout);

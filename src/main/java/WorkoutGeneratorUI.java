@@ -45,8 +45,9 @@ public class WorkoutGeneratorUI extends JFrame implements ActionListener{
         JButton addExerciseButton = new JButton("Add Exercise");
         addExerciseButton.setMinimumSize(buttonDimension);
         addExerciseButton.addActionListener(e -> {
-            ExerciseMakerUI maker = new ExerciseMakerUI();
-            maker.makeExercise();
+            ExerciseMakerUI eventSource = new ExerciseMakerUI();
+            eventSource.makeExercise();
+            eventSource.addObserver(workoutGenerator::addExercise);
         });
 
         //EDIT EXERCISE BUTTON
@@ -60,9 +61,10 @@ public class WorkoutGeneratorUI extends JFrame implements ActionListener{
                 String name = (String) workoutTable.getValueAt(selectedRow, 0);
                 Exercise exerciseToEdit = workoutGenerator.getExercise(name);
                 ExerciseEditorUI eventSource = new ExerciseEditorUI();
-                eventSource.editExercise(exerciseToEdit);
-                workoutGenerator.deleteExercise(exerciseToEdit.name);
-                workoutGenerator.addExercise(exerciseToEdit);
+                eventSource.showExerciseEditor(exerciseToEdit);
+                String response = workoutGenerator.editExercise(exerciseToEdit);
+                JOptionPane.showMessageDialog(panel, response);
+
             }
         });
 
@@ -147,7 +149,7 @@ public class WorkoutGeneratorUI extends JFrame implements ActionListener{
         });
 
         //Application Window
-        UIUtils.updateTableData(tableData, workoutGenerator.getExerciseList());
+        UIUtils.updateExerciseTableData(tableData, workoutGenerator.getExerciseList());
         setPreferredSize(new Dimension(1000, 650));
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         pack();

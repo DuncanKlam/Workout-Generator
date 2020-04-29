@@ -71,9 +71,6 @@ public class Exercise {
 
     public String[] getMuscleGroupsArray() {
         String[] muscleGroupArray = new String[muscleGroups.size()];
-        for(int i=0; i<muscleGroups.size(); i++){
-            muscleGroupArray[i] = muscleGroups.get(i);
-        }
-        return muscleGroupArray;
+        return muscleGroups.toArray(muscleGroupArray);
     }
 }

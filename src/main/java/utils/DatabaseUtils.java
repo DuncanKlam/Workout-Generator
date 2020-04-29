@@ -67,17 +67,25 @@ public class DatabaseUtils {
     }
 
     public String addWorkoutToDatabase(Workout w){
-        Workout transferWorkout = new Workout(w);
-       for(int i=0;i<w.exerciseList.size();i++){
-           transferWorkout.setExercise(w.exerciseList.get(i),w.exArr[i]);
-       }
-       for(int i=w.exerciseList.size();i<8;i++){
-           transferWorkout.setExercise(new Exercise(), w.exArr[i]);
-       }
         try{
-            workoutDao.create(transferWorkout);
-            return "Success";
-        } catch (SQLException e){
+        Workout transferWorkout = new Workout(w);
+        if(w.exerciseList == null){
+            for(int k=0;k<8;k++){
+                transferWorkout.setExercise(new Exercise(), w.exArr[k]);
+            }
+        }
+        else {
+            for (int i = 0; i < w.exerciseList.size(); i++) {
+                transferWorkout.setExercise(w.exerciseList.get(i), w.exArr[i]);
+            }
+            for (int i = w.exerciseList.size(); i < 8; i++) {
+                transferWorkout.setExercise(new Exercise(), w.exArr[i]);
+            }
+        }
+        workoutDao.create(transferWorkout);
+        return "Success";
+        }
+        catch (SQLException e){
             return "Item exists in database";
         }
     }
@@ -108,7 +116,13 @@ public class DatabaseUtils {
         }
     }
 
-    public void clearWorkoutDatabase() throws SQLException {
-        workoutDao.delete(workoutDao.queryForAll());
+    public String clearWorkoutDatabaseOfSpecificWorkout(Workout w) {
+        try {
+            workoutDao.delete(workoutDao.queryForMatching(w));
+            return "Success";
+        } catch (SQLException e){
+            e.printStackTrace();
+            return "Failure";
+        }
     }
 }

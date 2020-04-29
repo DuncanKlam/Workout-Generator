@@ -12,47 +12,60 @@ import java.util.List;
 
 public class UIUtils extends JFrame{
 
-    private static JPanel panel;
 
-    public UIUtils(JPanel panel){
-       this.panel = panel;
+    public static String updateExerciseTableData(DefaultTableModel tableData, LinkedList<Exercise> exerciseList) {
+        try {
+            if (exerciseList.isEmpty()) {
+                return "List is empty";
+            }
+            if (tableData.getRowCount() != 0) {
+                clearTable(tableData);
+            }
+            String result = addListToExerciseTable(tableData, exerciseList);
+            tableData.fireTableStructureChanged();
+            return result;
+        } catch(NullPointerException e){
+            return "List is null";
+        }
     }
 
-
-    public static void updateTableData(DefaultTableModel tableData, LinkedList<Exercise> exerciseList) {
-        if (exerciseList == null){
-            return;
-        }
-        if (tableData.getRowCount() == 0){
-            for (Exercise e : exerciseList){
+    private static String addListToExerciseTable(DefaultTableModel tableData, LinkedList<Exercise> exerciseList) {
+        try {
+            for (Exercise e : exerciseList) {
                 tableData.addRow(new Object[]{e.name, e.sets, e.reps, e.unit});
             }
+            return "Success";
+        } catch(NullPointerException e){
+            e.printStackTrace();
+            return "Null Pointer Error";
         }
-        else{
-            clearTable(tableData);
-            for (Exercise e : exerciseList){
-                tableData.addRow(new Object[]{e.name, e.sets, e.reps, e.unit});
-            }
-        }
-        tableData.fireTableStructureChanged();
     }
 
-    public static void updateWorkoutTableData(DefaultTableModel tableData, LinkedList<Workout> workoutList) {
-        if (workoutList == null){
-            return;
+    public static String updateWorkoutTableData(DefaultTableModel tableData, LinkedList<Workout> workoutList) {
+        try {
+            if (workoutList.isEmpty()) {
+                return "List is empty";
+            }
+            if (tableData.getRowCount() != 0) {
+                clearTable(tableData);
+            }
+            String result = addListToWorkoutTable(tableData, workoutList);
+            tableData.fireTableStructureChanged();
+            return result;
+        } catch(NullPointerException e){
+            return "List is null";
         }
-        if (tableData.getRowCount() == 0){
-            for (Workout w : workoutList){
+    }
+
+    private static String addListToWorkoutTable(DefaultTableModel tableData, LinkedList<Workout> workoutList) {
+        try {
+            for (Workout w : workoutList) {
                 tableData.addRow(new Object[]{w.title, w.intensityNumber, w.duration});
             }
+            return "Success";
+        } catch(NullPointerException e){
+            return "Null Pointer Error";
         }
-        else{
-            clearTable(tableData);
-            for (Workout w : workoutList){
-                tableData.addRow(new Object[]{w.title, w.intensityNumber, w.duration});
-            }
-        }
-        tableData.fireTableStructureChanged();
     }
 
     private static void clearTable(DefaultTableModel tableData) {
@@ -62,14 +75,20 @@ public class UIUtils extends JFrame{
         }
     }
 
-    public static void makeWorkoutTable(DefaultTableModel tableData, LinkedList<Exercise> exerciseList) {
-        if (exerciseList == null){
-            return;
+    public static String makeWorkoutTable(DefaultTableModel tableData, LinkedList<Exercise> exerciseList) {
+        try {
+            if (exerciseList.isEmpty()) {
+                return "List is empty";
+            }
+            for (Exercise e : exerciseList) {
+                tableData.addRow(new Object[]{e.name, e.sets, e.reps, e.unit, e.tier});
+            }
+            tableData.fireTableStructureChanged();
+            return "Success";
         }
-        for (Exercise e : exerciseList) {
-            tableData.addRow(new Object[]{e.name, e.sets, e.reps, e.unit, e.tier});
+        catch(NullPointerException e){
+            return "List is null";
         }
-        tableData.fireTableStructureChanged();
     }
 
     public static void makeCheckTable(CheckBoxTableModel checkTable, List<Exercise> exerciseList) {
@@ -96,12 +115,12 @@ public class UIUtils extends JFrame{
     }
     
     public static boolean everyCheckIsTrue(CheckBoxTableModel table) {
-        if((Boolean)table.getValueAt(table.getRowCount()-1,table.getColumnCount()-1) == true){
+        if((Boolean) table.getValueAt(table.getRowCount() - 1, table.getColumnCount() - 1)){
             return true;
         }
         for(int i=1;i<table.getColumnCount();i++){
             for(int k=0;k<table.getRowCount();k++){
-                if ((Boolean)table.getValueAt(k,i) == false){
+                if (!((Boolean) table.getValueAt(k, i))){
                     return false;
                 }
             }
@@ -109,13 +128,13 @@ public class UIUtils extends JFrame{
         return true;
     }
 
-    public String getTextFromComponent(int index){
+    public static String getTextFromComponent(JPanel panel, int index){
         Component component = panel.getComponent(index);
         JTextField textField = (JTextField) component;
         return textField.getText();
     }
 
-    public int getIntFromComponent(int index) {
+    public static int getIntFromComponent(JPanel panel, int index) {
         Component component = panel.getComponent(index);
         JTextField textField = (JTextField) component;
         if(textField.getText().isEmpty()){
@@ -124,7 +143,7 @@ public class UIUtils extends JFrame{
         return Integer.parseInt(textField.getText());
     }
 
-    public LinkedList<String> getMusclesList(JCheckBox[] checkBoxes) {
+    public static LinkedList<String> getMusclesList(JCheckBox[] checkBoxes) {
         LinkedList<String> muscleGroupsUsed = new LinkedList<>();
         for(JCheckBox box: checkBoxes){
             if(box.isSelected()){

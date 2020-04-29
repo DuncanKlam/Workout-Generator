@@ -55,8 +55,10 @@ public class Workout {
 
     public Workout(Workout w){
         this.title = w.title;
-        this.duration = w.getWorkoutDuration();
-        this.intensityNumber = w.exerciseList.size();
+        this.timeStarted = w.timeStarted;
+        this.timeEnded = w.timeEnded;
+        this.duration = getWorkoutDuration();
+        this.intensityNumber = w.intensityNumber;
     }
 
     public Workout(String title, List<Exercise> exercises, String intensityString){
@@ -64,6 +66,7 @@ public class Workout {
         this.exerciseList = exercises;
         this.intensity = intensityString;
         this.timeStarted = LocalTime.now();
+        this.intensityNumber = exercises.size();
     }
 
     public String getTitle() {
@@ -97,5 +100,17 @@ public class Workout {
         }else{
             this.ex8=e.toString();
         }
+    }
+
+    @Override
+    public boolean equals(Object o){
+        if(o == null)                return false;
+        if(!(o instanceof Workout)) return false;
+
+        Workout other = (Workout) o;
+        if(! (this.title.equals(other.title)))      return false;
+        if(! (this.duration.equals(other.duration)))      return false;
+
+        return true;
     }
 }
